@@ -1,0 +1,45 @@
+name: SQL command execution workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      resource_group:
+        description: 'Azure resource group'
+        type: string
+        default: ''
+        required: true
+      sql_server:
+        description: 'SQL server'
+        type: string
+        default: ''
+        required: true
+      sql_database:
+        description: 'SQL database'
+        type: string
+        default: ''
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  RESOURCEGROUP: ${{github.event.inputs.resource_group}}
+  SQLSERVER: ${{github.event.inputs.sql_server}}
+  SQLDATABASE: ${{github.event.inputs.sql_database}}
+  CONNECTIONSTRING: "Server=tcp:${{github.event.inputs.sql_server}}.database.windows.net,1433;Initial Catalog=${{github.event.inputs.sql_database}};Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default;"
+
+jobs:
+  SQLCommandExecute:
+    name: 'SQL Command Execution job'
+    steps:
+      - name: 'Checkout repo'
+        uses: actions/checkout@v4
+      
+      - name: 'Login Azure'
+        uses: azure/login@v4
+        with:
+          client-id: ${{secrets.AZURE_CLIENT_ID}}
+          tenant-id: ${{secrets.AZURE_TENANT_ID}}
+          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+          enable-AzPSSession: true
