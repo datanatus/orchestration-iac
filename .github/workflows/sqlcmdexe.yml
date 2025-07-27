@@ -44,3 +44,15 @@ jobs:
           tenant-id: ${{secrets.AZURE_TENANT_ID}}
           subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
           enable-AzPSSession: true
+
+      - name: 'Get the access token'
+        uses: azure/cli@v2
+        with:
+          azcliversion: 'latest'
+          inlineScript: |
+            access_token=$(az account get-access-token --query accessToken -o tsv)
+            "token=$access_token" >> GITHUB_ENV
+
+      - name: Print Access Token
+        run: |
+          echo "$token"
