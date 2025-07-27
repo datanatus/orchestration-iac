@@ -50,12 +50,12 @@ jobs:
         with:
           azcliversion: 'latest'
           inlineScript: |
-            publicIp = (Invoke-RestMethod -Uri "https://api.ipify.org?format=json").ip Write-Output "GitHub runner's public IP: $publicIp"
-            az sql server firewall-rule create `
-              --resource-group ${{env.RESOURCEGROUP}} `
-              --server ${{env.SQLSERVER}} `
-              --name "Allow Github actions" `
-              --start-ip-address $publicIp `
+            publicIp = curl api.ipify.org
+            az sql server firewall-rule create \
+              --resource-group ${{env.RESOURCEGROUP}} \
+              --server ${{env.SQLSERVER}} \
+              --name "Allow Github actions" \
+              --start-ip-address $publicIp \
               --end-ip-address $publicIp
 
       - name: 'Get the access token'
