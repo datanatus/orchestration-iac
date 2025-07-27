@@ -69,5 +69,6 @@ jobs:
            -Body @{ resource="https://database.windows.net/"; grant_type="client_credentials"; client_id=$clientid; client_secret=$secret }`
            -ContentType "application/x-www-form-urlencoded"
           $access_token = $request.access_token
+          Write-Host "$access_token"
           Invoke-Sqlcmd -ServerInstance sql-orch-gartnercat.database.windows.net -Database AA-ConfigDB -AccessToken $access_token`
            -query "CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat];"
