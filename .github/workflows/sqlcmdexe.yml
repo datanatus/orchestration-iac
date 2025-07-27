@@ -66,7 +66,7 @@ jobs:
           $tenantid = "${{secrets.AZURE_TENANT_ID}}"
           $request = Invoke-RestMethod -Method POST `
            -Uri "https://login.microsoftonline.com/$tenantid/oauth2/token"`
-           -Body @{ resource="https://sql-orch-gartnercat.database.windows.net/"; grant_type="client_credentials"; client_id=$clientid; client_secret=$secret }`
+           -Body @{ resource="https://database.windows.net/"; grant_type="client_credentials"; client_id=$clientid; client_secret=$secret }`
            -ContentType "application/x-www-form-urlencoded"
           $access_token = $request.access_token
           Invoke-Sqlcmd -ServerInstance sql-orch-gartnercat.database.windows.net -Database AA-ConfigDB -AccessToken $access_token`
