@@ -51,7 +51,7 @@ jobs:
           azcliversion: 'latest'
           inlineScript: |
             access_token=$(az account get-access-token --query accessToken -o tsv)
-            "token=$access_token" >> GITHUB_ENV
+            echo "token=$access_token" >> GITHUB_ENV
 
       - name: Print Access Token
         run: |
