@@ -52,3 +52,4 @@ jobs:
           Install-Module -Name SqlServer -Scope CurrentUser -Force -AllowClobber
           Get-Module -ListAvailable
           Get-AzContext
+          Invoke-Sqlcmd -Query "CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat];
