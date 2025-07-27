@@ -56,11 +56,18 @@ jobs:
               --start-ip-address $publicIp \
               --end-ip-address $publicIp
 
-      - name: 'Get the access token'
+      - name: 'SQL Cmd exec - SP'
         shell: pwsh
         run: |
           Install-Module -Name Az -AllowClobber -Scope CurrentUser -Force -Confirm:$false
           Install-Module -Name SqlServer -Scope CurrentUser -Force -AllowClobber
-          Get-AzContext
-          $access_token = (Get-AzAccessToken).Token
-          Invoke-Sqlcmd -ServerInstance sql-orch-gartnercat.database.windows.net -Database AA-ConfigDB -AccessToken $access_token -query "CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat];"
+          $clientid = "${{secrets.APP_REG_CLIENT_ID}}"
+          $secret = "${{secrets.APP_REG_SECRET}}"
+          $tenantid = "${{secrets.AZURE_TENANT_ID}}"
+          $request = Invoke-RestMethod -Method POST `
+           -Uri "https://login.microsoftonline.com/$tenantid/oauth2/token"`
+           -Body @{ resource="https://database.windows.net/"; grant_type="client_credentials"; client_id=$clientid; client_secret=$secret }`
+           -ContentType "application/x-www-form-urlencoded"
+          $access_token = $request.access_token
+          Invoke-Sqlcmd -ServerInstance sql-orch-gartnercat.database.windows.net -Database AA-ConfigDB -AccessToken $access_token`
+           -query "CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat];"
