@@ -48,4 +48,5 @@ jobs:
       - name: 'Get the access token'
         shell: pwsh
         run: |
+          Install-Module -Name Az -AllowClobber -Scope CurrentUser
           Get-Module -ListAvailable
