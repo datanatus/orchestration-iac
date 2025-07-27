@@ -52,4 +52,4 @@ jobs:
           Install-Module -Name SqlServer -Scope CurrentUser -Force -AllowClobber
           Get-Module -ListAvailable
           Get-AzContext
-          Invoke-Sqlcmd -Query "CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat]; -ConnectionString Server=tcp:sql-orch-gartnercat.database.windows.net,1433;Initial Catalog=AA-ConfigDB;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication="Active Directory Default";
+          Invoke-Sqlcmd -Query "CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat]; -ConnectionString Server=tcp:sql-orch-gartnercat.database.windows.net,1433;Initial Catalog=AA-ConfigDB;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication="Active Directory Default";"
