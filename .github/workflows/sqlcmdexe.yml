@@ -87,4 +87,9 @@ jobs:
           Install-Module -Name Az -AllowClobber -Scope CurrentUser -Force -Confirm:$false
           Install-Module -Name SqlServer -Scope CurrentUser -Force -AllowClobber
           Get-AzContext
-          Invoke-Sqlcmd -Query "CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat];" -ConnectionString "Server=tcp:sql-orch-gartnercat.database.windows.net,1433;Initial Catalog=AA-ConfigDB;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default;"
+          # Invoke-Sqlcmd -Query "CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat];" -ConnectionString "Server=tcp:sql-orch-gartnercat.database.windows.net,1433;Initial Catalog=AA-ConfigDB;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default;"
+          $access_token = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
+
+          # Now that we have the token, we use it to connect to the database 'mydb' on server 'myserver'
+          Invoke-Sqlcmd -ServerInstance ${{env:SQLSERVER}}.database.windows.net -Database ${{env:SQLDATABASE}} -AccessToken $access_token `
+                        -query 'CREATE USER [mi-boc-gartnercat] FROM EXTERNAL PROVIDER; ALTER ROLE [db_owner] ADD MEMBER [mi-boc-gartnercat];'
